@@ -1,5 +1,5 @@
 # Blockchain Arena: Simulating Mining Wars and Network Attacks 🚀
-<div align="left">
+<div align="center">
 <img src="./blockchain_arena.png" alt="Blockchain Banner" width="600"/>
 </div>
 Welcome to the official repository for the Blockchain Arena project! This document serves as the central hub for our timeline, assignments, and resources.
