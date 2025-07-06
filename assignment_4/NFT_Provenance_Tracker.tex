@@ -1,0 +1,130 @@
+\documentclass[12pt]{extarticle}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{fontawesome}
+\usepackage{amssymb}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+\newcommand{\thinking}{\includegraphics[height=1.2em]{thinking.png}}
+\newcommand{\allthebest}{\includegraphics[height=7em]{all_the_best.png}}
+
+\begin{document}
+\begin{titlepage}
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{iitb_logo.png}\\[1.5cm]
+        {\LARGE \bfseries Blockchain Arena}\\
+        \vspace{0.5cm}
+        {\Large \bfseries Simulating Mining Wars and Network Attacks}\\
+        \vspace{1cm}
+        {\LARGE \bfseries Final Assignment}\\
+        \vspace{0.5cm}
+        {\Large \bfseries Verifiable On-Chain Provenance Tracker}\\
+        \vspace{1.5cm}
+        {\Large \bf Release Date: July 06, 2025}\\
+        \vspace{0.5cm}
+        {\Large \bf Due Date: 23:59hrs, July 16, 2025}\\
+        \vspace{3cm}
+        \includegraphics[width=0.9\textwidth]{blockchain_arena.jpeg}\\[1.5cm]
+    \end{center}
+\end{titlepage}
+
+\vspace{1cm}
+
+\section*{Objective}
+Welcome to your final assignment! In this project, you will build a complete decentralized application (DApp) to register unique items and track their ownership history on the blockchain. This will create a verifiable, tamper-proof record of provenance, which is the core concept behind Non-Fungible Tokens (NFTs). Think of it as a system for tracking high-value goods like luxury watches, university degrees, or digital art certificates.
+
+\section*{Learning Objectives}
+This project will solidify your understanding of:
+\begin{itemize}
+    \item \textbf{Smart Contract Development:} Writing, testing, and deploying contracts using Solidity and Remix IDE.
+    \item \textbf{Custom Data Structures:} Using \texttt{struct} to model real-world objects on-chain.
+    \item \textbf{State Management:} Using \texttt{mappings} to store and retrieve data efficiently.
+    \item \textbf{Event-Driven Architecture:} Using \texttt{events} to log important state changes and communicate with the frontend.
+    \item \textbf{Access Control:} Writing secure functions and protecting state changes with modifiers or \texttt{require} statements.
+    \item \textbf{Full-Stack DApp Integration:} Connecting a web frontend to a smart contract backend using the \texttt{ethers.js} library.
+    \item \textbf{Event Querying:} Reading on-chain event logs to reconstruct item history.
+\end{itemize}
+
+\section*{Tools and Environment}
+\begin{itemize}
+    \item \textbf{Smart Contract IDE:} I strongly recommend using the \textbf{Remix IDE} (\url{https://remix.ethereum.org/}) for writing, compiling, and deploying your Solidity smart contract. It is a web-based IDE that requires no setup.
+    \item \textbf{GitHub Integration:} Link your Remix IDE to your GitHub account to securely manage and back up your code. Since Remix is browser-based, connecting to GitHub helps prevent accidental data loss.
+    \item \textbf{Test Network:} You will deploy your contract to an Ethereum test network (e.g., \textbf{Sepolia}). You can get free test ETH from a public faucet.
+    \item \textbf{Frontend:} A simple HTML, CSS, and JavaScript stack.
+    \item \textbf{Wallet:} A browser-based wallet like \textbf{MetaMask} is required to interact with your DApp.
+\end{itemize}
+
+\section*{Core Requirements}
+This project has two main parts: the smart contract backend and the web frontend.
+
+\subsection*{Part 1: Smart Contract (\texttt{Tracker.sol})}
+You will write a Solidity smart contract with the following features:
+
+\begin{enumerate}
+    \item \textbf{Item Struct:} Create a \texttt{struct} named \texttt{Item} to store the data for each unique item. It must contain at least:
+          \begin{itemize}
+              \item \texttt{uint256 id}: A unique identifier for the item.
+              \item \texttt{string name}: A name or description for the item.
+              \item \texttt{address owner}: The Ethereum address of the current owner.
+          \end{itemize}
+
+    \item \textbf{State Variables:}
+          \begin{itemize}
+              \item A \texttt{mapping} to link a \texttt{uint256} ID to its corresponding \texttt{Item} struct.
+              \item A counter variable to ensure every new item gets a unique ID.
+          \end{itemize}
+
+    \item \textbf{Events:} The contract must emit events for key actions to allow the frontend to listen for changes.
+          \begin{itemize}
+              \item \texttt{event ItemRegistered(uint256 indexed id, address indexed owner, string name);}
+              \item \texttt{event OwnershipTransferred(uint256 indexed id, address indexed from, address indexed to);}
+          \end{itemize}
+
+    \item \textbf{Functions:}
+          \begin{itemize}
+              \item \texttt{function registerItem(string memory \_name)}: Creates a new item with a unique ID, sets the function caller (\texttt{msg.sender}) as the initial owner, and emits an \texttt{ItemRegistered} event.
+              \item \texttt{function transferOwnership(uint256 \_id, address \_newOwner)}: Must verify that the \texttt{msg.sender} is the current owner of the item before updating the owner and emitting an \texttt{OwnershipTransferred} event.
+          \end{itemize}
+\end{enumerate}
+
+\subsection*{Part 2: Frontend (HTML, CSS, JavaScript with \texttt{ethers.js})}
+Build a simple web interface to interact with your deployed smart contract.
+\begin{enumerate}
+    \item \textbf{Wallet Connection:} A button to allow users to connect their MetaMask wallet to your DApp.
+    \item \textbf{Register New Item:} A form with a text input for the item's name and a ``Register'' button that calls the \texttt{registerItem} function.
+    \item \textbf{Display Items:} List all registered items. The best way to do this is by fetching and listening for the \texttt{ItemRegistered} events.
+    \item \textbf{Transfer Ownership:} For each item they own, the connected user should see an input field and a ``Transfer'' button to assign a new owner by calling the \texttt{transferOwnership} function.
+    \item \textbf{View Provenance:} Allow a user to click on any item to view its complete ownership history. This will require you to fetch all \texttt{OwnershipTransferred} events related to that specific item's ID.
+\end{enumerate}
+
+\section*{Bonus Features (Optional)}
+If you finish the core requirements early, try implementing one of these:
+\begin{itemize}
+    \item \textbf{Enhanced Metadata:} Add more fields to your \texttt{Item} struct, like a URL to an image or a longer description.
+    \item \textbf{Burnable Items:} Implement a \texttt{burnItem(uint256 \_id)} function that allows an owner to permanently destroy their item's record (be sure to add proper access control).
+    \item \textbf{Approval Function:} Add an \texttt{approve(address \_to, uint256 \_id)} function, similar to the ERC-721 standard, that allows an owner to grant another address permission to transfer the item on their behalf.
+\end{itemize}
+
+\section*{Submission Guidelines}
+Submit the GitHub repository link containing the following files:
+\begin{enumerate}
+    \item Source code for your smart contract (\texttt{Tracker.sol}).
+    \item All frontend source code files (HTML, CSS, JS).
+    \item A \texttt{README.md} file with:
+          \begin{itemize}
+              \item Instructions for running the frontend.
+              \item The deployed contract address on the Sepolia test network.
+              \item A link to the contract on a block explorer like Etherscan.
+          \end{itemize}
+\end{enumerate}
+
+\vspace{2cm}
+
+\begin{center}
+    \allthebest\\
+    \Large \textbf{GOOD LUCK \& ENJOY BUILDING!}
+\end{center}
+
+\end{document}
